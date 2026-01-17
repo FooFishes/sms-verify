@@ -11,20 +11,28 @@
     <groupId>work.foofish</groupId>
     <artifactId>sms-verify</artifactId>
     <version>0.1.0</version>
-    <name>sms-verify</name>
-    <description>sms-verify</description>
-    <url/>
+    <packaging>jar</packaging>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>A Simple SMS Verify Service for Aliyun and Tencent Cloud</description>
+    <url>https://github.com/foofishes/sms-verify</url>
     <licenses>
-        <license/>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
     </licenses>
     <developers>
-        <developer/>
+        <developer>
+            <name>foofish</name>
+            <email>lzyyy666@gmail.com</email>
+            <url>https://github.com/foofishes</url>
+        </developer>
     </developers>
     <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
+        <connection>scm:git:git:https://github.com/foofishes/sms-verify.git</connection>
+        <developerConnection>scm:git:ssh://github.com:foofishes/sms-verify.git</developerConnection>
+        <tag>0.1.0</tag>
+        <url>https://github.com/foofishes/sms-verify</url>
     </scm>
     <properties>
         <java.version>21</java.version>
@@ -85,7 +93,82 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+            <!-- Maven Source Plugin - 生成源代码 JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Maven Javadoc Plugin - 生成 Javadoc JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.3</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- 忽略 Javadoc 错误，避免构建失败 -->
+                    <doclint>none</doclint>
+                    <source>21</source>
+                </configuration>
+            </plugin>
+
+            <!-- Maven GPG Plugin - GPG 签名 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Nexus Staging Plugin - 用于发布到 Maven 中央仓库 -->
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.9.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                    <autoPublish>true</autoPublish>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
+    <!-- 配置发布仓库 -->
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
 </project>
