@@ -8,9 +8,9 @@
         <version>4.0.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.foofish</groupId>
+    <groupId>work.foofish</groupId>
     <artifactId>sms-verify</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0</version>
     <name>sms-verify</name>
     <description>sms-verify</description>
     <url/>
