@@ -85,6 +85,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <skip>true</skip>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
@@ -143,6 +144,14 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <!-- 使用 loopback pinentry 模式避免 keyboxd 和终端交互问题 -->
+                    <gpgArguments>
+                        <arg>--pinentry-mode</arg>
+                        <arg>loopback</arg>
+                        <arg>--no-tty</arg>
+                    </gpgArguments>
+                </configuration>
             </plugin>
 
             <!-- Nexus Staging Plugin - 用于发布到 Maven 中央仓库 -->
