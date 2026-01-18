@@ -33,7 +33,7 @@ public class SmsAutoConfiguration {
     /**
      * 初始化阿里云策略
      */
-    @Bean
+    @Bean("aliyun")
     @ConditionalOnProperty(prefix = "sms.aliyun", name = "access-key-id")
     public SmsStrategy aliyunSmsStrategy(SmsProperties props, Client client) {
         return new AliyunSmsStrategy(props.getAliyun(), client);
