@@ -10,7 +10,7 @@
     </parent>
     <groupId>work.foofish</groupId>
     <artifactId>sms-verify</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A Simple SMS Verify Service for Aliyun and Tencent Cloud</description>
@@ -37,6 +37,28 @@
     <properties>
         <java.version>21</java.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- 修复 CVE-2023-0833 (okhttp) 和 CVE-2023-3635 (okio) -->
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>4.12.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>logging-interceptor</artifactId>
+                <version>4.12.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okio</groupId>
+                <artifactId>okio</artifactId>
+                <version>3.9.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -57,6 +79,17 @@
             <groupId>com.aliyun</groupId>
             <artifactId>dypnsapi20170525</artifactId>
             <version>2.0.0</version>
+            <exclusions>
+                <!-- 排除易受攻击的传递依赖，并在 dependencyManagement 中统一管理安全版本 -->
+                <exclusion>
+                    <groupId>com.squareup.okhttp3</groupId>
+                    <artifactId>okhttp</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.squareup.okio</groupId>
+                    <artifactId>okio</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- 腾讯云短信 SDK -->
@@ -64,6 +97,14 @@
             <groupId>com.tencentcloudapi</groupId>
             <artifactId>tencentcloud-sdk-java-sms</artifactId>
             <version>3.1.1357</version>
+            <exclusions>
+                <!-- 修复 CVE-2022-41404: org.ini4j:ini4j 存在拒绝服务漏洞且官方未发布修复版本。
+                     该依赖由腾讯云 SDK 引入，若不使用其 .ini 配置文件功能可安全排除。 -->
+                <exclusion>
+                    <groupId>org.ini4j</groupId>
+                    <artifactId>ini4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
