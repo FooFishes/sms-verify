@@ -7,10 +7,7 @@ import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import work.foofish.smsverify.config.SmsProperties;
-import work.foofish.smsverify.core.SmsException;
-import work.foofish.smsverify.core.SmsRequest;
-import work.foofish.smsverify.core.SmsResponse;
-import work.foofish.smsverify.core.SmsStrategy;
+import work.foofish.smsverify.core.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,10 +18,13 @@ public class AliyunSmsStrategy implements SmsStrategy {
 
     @Override
     public SmsResponse send (SmsRequest request) {
+        String phone = request.getPhone();
+        String templateId = request.getTemplateId();
+        
         try {
             SendSmsVerifyCodeRequest req = new SendSmsVerifyCodeRequest();
-            req.phoneNumber = request.getPhone();
-            req.templateCode = request.getTemplateId();
+            req.phoneNumber = phone;
+            req.templateCode = templateId;
             req.templateParam = gson.toJson(request.getParams());
             req.signName = config.getSignName();
             req.interval = config.getInterval().longValue();
@@ -34,12 +34,15 @@ public class AliyunSmsStrategy implements SmsStrategy {
             if (resp.getBody().getSuccess() != true) {
                 String code = resp.getBody().getCode();
                 String message = resp.getBody().getMessage();
-                return SmsResponse.fail(code, message, getProviderName());
+                String requestId = resp.getBody().getRequestId();
+                SmsErrorType errorType = SmsErrorType.fromAliyunCode(code);
+                return SmsResponse.fail(code, message, getProviderName(), phone, templateId, requestId, errorType);
             }
 
-            return SmsResponse.success(resp.getBody().getRequestId(), getProviderName());
+            return SmsResponse.success(resp.getBody().getRequestId(), getProviderName(), phone, templateId);
         } catch (Exception e) {
-            return SmsResponse.fail("EXCEPTION", e.getMessage(), getProviderName());
+            SmsErrorType errorType = SmsErrorType.NETWORK_ERROR;
+            return SmsResponse.fail("EXCEPTION", e.getMessage(), getProviderName(), phone, templateId, errorType);
         }
     }
 
