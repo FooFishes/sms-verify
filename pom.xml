@@ -10,7 +10,7 @@
     </parent>
     <groupId>work.foofish</groupId>
     <artifactId>sms-verify</artifactId>
-    <version>0.1.2</version>
+    <version>0.1.3</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A Simple SMS Verify Service for Aliyun and Tencent Cloud</description>
