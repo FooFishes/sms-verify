@@ -43,7 +43,7 @@ public class SmsAutoConfiguration {
      * 核心服务入口
      */
     @Bean
-    public SmsTemplate smsService(Map<String, SmsStrategy> strategies, SmsProperties prop) {
+    public SmsTemplate smsTemplate (Map<String, SmsStrategy> strategies, SmsProperties prop) {
         return new SmsTemplate(strategies, prop);
     }
 }
